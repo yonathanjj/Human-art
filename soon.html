@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HumanArt | Coming Soon</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --brown: #5d4037;
+            --dark: #111111;
+            --light: #f8f8f8;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: var(--dark);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            position: relative;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 10%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .background {
+            flex: 1;
+            background-image: url('main.png');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0,0,0,0.7), rgba(0,0,0,0.3));
+        }
+
+        .floating-art {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0;
+            animation: float 15s infinite linear;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -2px;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 1s 0.3s forwards;
+        }
+
+        h1 span {
+            color: var(--brown);
+            position: relative;
+            display: inline-block;
+        }
+
+        h1 span::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background-color: var(--brown);
+            opacity: 0.3;
+            z-index: -1;
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: underlineGrow 1s 1.3s forwards;
+        }
+
+        @keyframes underlineGrow {
+            to {
+                transform: scaleX(1);
+            }
+        }
+
+        p {
+            font-size: 1.2rem;
+            max-width: 500px;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s 0.6s forwards;
+        }
+
+        .form-container {
+            max-width: 500px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s 0.9s forwards;
+        }
+
+        .form-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 4px;
+            display: none;
+            animation: bounceIn 0.5s;
+        }
+
+        .form-message.success {
+            background-color: rgba(0, 255, 136, 0.1);
+            color: var(--dark);
+            border-left: 3px solid var(--brown);
+            display: block;
+        }
+
+        .form-message.error {
+            background-color: rgba(255, 0, 0, 0.1);
+            color: var(--dark);
+            border-left: 3px solid red;
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            transform: translateX(-10px);
+            opacity: 0;
+            animation: fadeInLeft 0.5s 1.2s forwards;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            font-size: 1rem;
+            transition: var(--transition);
+            transform: translateY(10px);
+            opacity: 0;
+            animation: fadeInUp 0.5s 1.4s forwards;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--brown);
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.2);
+        }
+
+        .cta-button {
+            background-color: var(--brown);
+            color: #ffffff;
+            border: none;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 5px 5px 0 var(--dark);
+            transform: translate(0, 0);
+            font-size: 1rem;
+            width: 100%;
+            opacity: 0;
+            animation: fadeIn 0.5s 1.6s forwards, pulse 2s 3s infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button:hover {
+            transform: translate(3px, 3px);
+            box-shadow: 2px 2px 0 var(--dark);
+        }
+
+        .cta-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: 0.5s;
+        }
+
+        .cta-button:hover::after {
+            transform: translateX(100%);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 5px 5px 0 var(--dark), 0 0 0 0 rgba(0, 255, 136, 0.7);
+            }
+            70% {
+                box-shadow: 5px 5px 0 var(--dark), 0 0 0 10px rgba(0, 255, 136, 0);
+            }
+            100% {
+                box-shadow: 5px 5px 0 var(--dark), 0 0 0 0 rgba(0, 255, 136, 0);
+            }
+        }
+
+       .logo {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  opacity: 0;
+  animation: fadeIn 0.5s 0.1s forwards;
+}
+
+.logo img {
+  width: 120px; /* adjust as needed */
+  height: auto;
+}
+
+
+        .counter {
+            display: flex;
+            gap: 1rem;
+            margin-top: 3rem;
+            opacity: 0;
+            animation: fadeIn 1s 2s forwards;
+        }
+
+        .counter-item {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            min-width: 80px;
+            transition: var(--transition);
+        }
+
+        .counter-item:hover {
+            transform: translateY(-5px);
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .counter-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--brown);
+            transition: var(--transition);
+        }
+
+        .counter-label {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+
+
+        @keyframes brushStrokeMove {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0.2;
+            }
+            50% {
+                transform: translate(50px, 50px) rotate(180deg);
+                opacity: 0.3;
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+                opacity: 0.2;
+            }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .content {
+                padding: 6rem 2rem 4rem;
+                text-align: center;
+            }
+
+            .background {
+                display: none;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .form-container {
+                margin: 0 auto;
+            }
+
+            .counter {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="content">
+        <div class="logo">
+            <img src="logo.png" alt="Ανθρώπινη Τέχνη Logo">
+        </div>
+        <!-- Decorative brush strokes -->
+        <div class="art-brush-stroke" style="top: 20%; left: 5%;"></div>
+        <div class="art-brush-stroke" style="top: 60%; left: 70%; animation-delay: 5s;"></div>
+        <div class="art-brush-stroke" style="top: 30%; left: 80%; animation-delay: 10s;"></div>
+
+        <h1>Authentic art <span>coming soon</span></h1>
+        <p>We're building a platform dedicated exclusively to human-made artwork. Join our waitlist to be notified when we launch.</p>
+
+        <div class="form-container">
+            <form id="waitlist-form" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="interest">What type of artist are you?</label>
+                    <select id="interest" name="interest">
+                        <option value="digital">Digital Artist</option>
+                        <option value="traditional">Traditional Artist</option>
+                        <option value="photographer">Photographer</option>
+                        <option value="collector">Art Collector</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="message">What are you hoping for in our platform? (Optional)</label>
+                    <textarea id="message" name="message" rows="3"></textarea>
+                </div>
+                <button type="submit" class="cta-button">Join Waitlist</button>
+            </form>
+            <div id="form-message" class="form-message"></div>
+        </div>
+
+        <div class="counter">
+            <div class="counter-item">
+                <div class="counter-number" id="days">00</div>
+                <div class="counter-label">Days</div>
+            </div>
+            <div class="counter-item">
+                <div class="counter-number" id="hours">00</div>
+                <div class="counter-label">Hours</div>
+            </div>
+            <div class="counter-item">
+                <div class="counter-number" id="minutes">00</div>
+                <div class="counter-label">Minutes</div>
+            </div>
+            <div class="counter-item">
+                <div class="counter-number" id="seconds">00</div>
+                <div class="counter-label">Seconds</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="background">
+        <!-- Floating art elements will be added by JavaScript -->
+    </div>
+</div>
+
+<script>
+    // Form submission handling
+    const form = document.getElementById('waitlist-form');
+    const formMessage = document.getElementById('form-message');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const submitButton = form.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton.textContent;
+
+        try {
+            submitButton.textContent = 'Sending...';
+            submitButton.disabled = true;
+
+            // Simulate form submission for demo purposes
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            // In a real implementation, you would use:
+            /*
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                formMessage.textContent = 'Thank you! We\'ll notify you when we launch.';
+                formMessage.className = 'form-message success';
+                form.reset();
+            } else {
+                throw new Error('Form submission failed');
+            }
+            */
+
+            // For demo purposes only:
+            formMessage.textContent = 'Thank you! We\'ll notify you when we launch.';
+            formMessage.className = 'form-message success';
+            form.reset();
+
+        } catch (error) {
+            formMessage.textContent = 'Oops! Something went wrong. Please try again.';
+            formMessage.className = 'form-message error';
+            console.error('Error:', error);
+        } finally {
+            submitButton.textContent = originalButtonText;
+            submitButton.disabled = false;
+
+            // Hide message after 5 seconds
+            setTimeout(() => {
+                formMessage.style.opacity = '0';
+                setTimeout(() => {
+                    formMessage.className = 'form-message';
+                    formMessage.style.opacity = '1';
+                }, 300);
+            }, 5000);
+        }
+    });
+
+    // Countdown timer (set to 30 days from now)
+    const countdownDate = new Date();
+    countdownDate.setDate(countdownDate.getDate() + 30);
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = countdownDate - now;
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById('days').textContent = days.toString().padStart(2, '0');
+        document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+        document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+        document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+
+        // Add animation when numbers change
+        if (seconds !== parseInt(document.getElementById('seconds').dataset.prev || 0)) {
+            animateCounter('seconds');
+        }
+        if (minutes !== parseInt(document.getElementById('minutes').dataset.prev || 0)) {
+            animateCounter('minutes');
+        }
+        if (hours !== parseInt(document.getElementById('hours').dataset.prev || 0)) {
+            animateCounter('hours');
+        }
+        if (days !== parseInt(document.getElementById('days').dataset.prev || 0)) {
+            animateCounter('days');
+        }
+
+        // Store current values for next comparison
+        document.getElementById('seconds').dataset.prev = seconds;
+        document.getElementById('minutes').dataset.prev = minutes;
+        document.getElementById('hours').dataset.prev = hours;
+        document.getElementById('days').dataset.prev = days;
+
+        if (distance < 0) {
+            clearInterval(countdownTimer);
+            document.querySelector('.counter').innerHTML = '<div class="counter-item"><div class="counter-number">🚀</div><div class="counter-label">We\'re live!</div></div>';
+        }
+    }
+
+    function animateCounter(id) {
+        const element = document.getElementById(id);
+        element.style.transform = 'scale(1.2)';
+        element.style.color = '#ff69b4';
+        setTimeout(() => {
+            element.style.transform = 'scale(1)';
+            element.style.color = 'var(--green)';
+        }, 300);
+    }
+
+    // Update countdown every second
+    updateCountdown();
+    const countdownTimer = setInterval(updateCountdown, 1000);
+
+    // Create floating art elements
+    function createFloatingArt() {
+        const artPieces = [
+
+        ];
+
+        const background = document.querySelector('.background');
+
+        setInterval(() => {
+            const art = document.createElement('div');
+            art.className = 'floating-art';
+
+            // Random position and size
+            const size = Math.random() * 50 + 30;
+            const left = Math.random() * 100;
+            const delay = Math.random() * 5;
+            const duration = Math.random() * 10 + 10;
+
+            art.style.width = `${size}px`;
+            art.style.height = `${size}px`;
+            art.style.left = `${left}%`;
+            art.style.bottom = `-${size}px`;
+            art.style.animationDelay = `${delay}s`;
+            art.style.animationDuration = `${duration}s`;
+            art.style.fontSize = `${size}px`;
+            art.style.textAlign = 'center';
+            art.style.lineHeight = `${size}px`;
+
+            // Random emoji
+            art.textContent = artPieces[Math.floor(Math.random() * artPieces.length)];
+
+            background.appendChild(art);
+
+            // Remove element after animation completes
+            setTimeout(() => {
+                art.remove();
+            }, (duration + delay) * 1000);
+        }, 800);
+    }
+
+    // Start creating floating art after page loads
+    window.addEventListener('load', () => {
+        createFloatingArt();
+
+        // Add hover effect to counter items
+        const counterItems = document.querySelectorAll('.counter-item');
+        counterItems.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                item.querySelector('.counter-number').style.transform = 'scale(1.2)';
+            });
+            item.addEventListener('mouseleave', () => {
+                item.querySelector('.counter-number').style.transform = 'scale(1)';
+            });
+        });
+    });
+</script>
+</body>
+</html>
